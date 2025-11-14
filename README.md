@@ -30,8 +30,8 @@ This repository contains a **NestJS-based REST API** that manages **users**, **p
 
 ```bash
 # Clone the repository
-$ git clone https://github.com/your-username/your-repo-name.git
-$ cd your-repo-name
+$ git clone https://github.com/asmeyb/ellatech-backend-assignment.git
+$ cd your-project-folder
 
 # Install dependencies
 $ npm install
