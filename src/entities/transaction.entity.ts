@@ -1,29 +1,27 @@
-// api/src/entities/transaction.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn } from 'typeorm';
 import { Product } from './product.entity';
 
 export enum TransactionType {
-  IN = 'IN',
-  OUT = 'OUT',
+  INBOUND = 'INBOUND',
+  OUTBOUND = 'OUTBOUND',
 }
 
-@Entity()
+@Entity('transactions')
 export class Transaction {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ type: 'uuid' })
+  productId: string;
 
   @Column({ type: 'enum', enum: TransactionType })
   type: TransactionType;
 
   @Column({ type: 'int' })
-  quantityChange: number; // The amount added (positive) or removed (negative)
+  quantityChanged: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamp' })
   timestamp: Date;
-
-  // Relationship to Product
-  @Column()
-  productId: number;
 
   @ManyToOne(() => Product, (product) => product.transactions, {
     onDelete: 'CASCADE',

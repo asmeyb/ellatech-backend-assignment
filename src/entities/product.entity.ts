@@ -1,20 +1,17 @@
-// api/src/entities/product.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Check } from 'typeorm';
 import { Transaction } from './transaction.entity';
 
-@Entity()
+@Entity('products')
+@Check('"quantity" >= 0')
 export class Product {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ length: 100, unique: true })
   name: string;
 
-  @Column({ unique: true })
-  sku: string; // Stock Keeping Unit
-
   @Column({ type: 'int', default: 0 })
-  stock: number;
+  quantity: number;
 
   @OneToMany(() => Transaction, (transaction) => transaction.product)
   transactions: Transaction[];

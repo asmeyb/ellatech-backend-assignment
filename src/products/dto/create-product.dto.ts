@@ -1,17 +1,13 @@
-// api/src/products/dto/create-product.dto.ts
-import { IsNotEmpty, IsString, IsNumber, IsInt, Min } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsInt, Min, IsOptional } from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()
   @IsString()
   name: string;
 
-  @IsNotEmpty()
-  @IsString()
-  sku: string; // Stock Keeping Unit should be unique
-
+  @IsOptional()
   @IsNumber()
   @IsInt()
-  @Min(0) // Stock cannot be negative upon creation
-  stock: number;
+  @Min(0)
+  quantity?: number = 0;
 }

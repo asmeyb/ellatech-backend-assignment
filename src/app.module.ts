@@ -1,38 +1,45 @@
-import { Module, Post } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HelloModule } from './hello/hello.module';
-import { ConfigModule } from '@nestjs/config';
-import { PostsModule } from './posts/posts.module';
-import * as joi from 'joi';
-import appConfig from './config/app.config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import * as joi from 'joi';
 
 @Module({  
   imports: [
-    TypeOrmModule.forRoot({
-      type:'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '158861',
-      database: 'youtube-nest-project',
-      autoLoadEntities: true,
-      entities:[], // Array of entities or path to entity files
-      synchronize: true,
-    }),
     ConfigModule.forRoot({
-        isGlobal: true,
-        validationSchema: joi.object({
-          // APP_NAME: joi.string().default('default-app'),
-          // APP_PORT: joi.number().default(3000 
-          load: [appConfig],         
-      })
+      isGlobal: true,
+      validationSchema: joi.object({
+        DB_HOST: joi.string().default('localhost'),
+        DB_PORT: joi.number().default(5432),
+        DB_USERNAME: joi.string().default('postgres'),
+        DB_PASSWORD: joi.string().required(),
+        DB_NAME: joi.string().default('inventory_db'),
+        PORT: joi.number().default(3000),
       }),
-    HelloModule, UsersModule, PostsModule, ProductsModule, TransactionsModule],
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        autoLoadEntities: true,
+        synchronize: false, // Disable in production, use migrations
+        migrations: ['dist/migrations/*.js'],
+        migrationsRun: true,
+      }),
+    }),
+    UsersModule,
+    ProductsModule,
+    TransactionsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

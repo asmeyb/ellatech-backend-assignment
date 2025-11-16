@@ -1,20 +1,11 @@
-// api/src/products/dto/adjust-product.dto.ts
-import { IsNotEmpty, IsInt, Min, IsPositive, IsIn, IsString } from 'class-validator';
-import { TransactionType } from '../../entities/transaction.entity';
+import { IsNotEmpty, IsInt, IsUUID } from 'class-validator';
 
 export class AdjustProductDto {
   @IsNotEmpty()
-  @IsInt()
-  @Min(1)
-  productId: number; // The product to adjust
+  @IsUUID()
+  productId: string;
 
   @IsNotEmpty()
   @IsInt()
-  @IsPositive()
-  quantity: number; // The amount to add or remove
-
-  @IsNotEmpty()
-  @IsString()
-  @IsIn([TransactionType.IN, TransactionType.OUT])
-  type: TransactionType; // 'IN' to increase stock, 'OUT' to decrease
+  changeAmount: number; // Positive for INBOUND, negative for OUTBOUND
 }
