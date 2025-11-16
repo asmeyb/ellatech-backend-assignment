@@ -31,8 +31,8 @@ A robust, containerized backend service for managing users, products, and invent
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
-cd <project-directory>
+git clone https://github.com/asmeyb/ellatech-backend-assignment.git
+cd ellatech-backend-assignment
 ```
 
 ### 2. Start the application
@@ -79,9 +79,9 @@ Create a `.env` file in the root directory:
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_NAME=inventory_db
+DB_USERNAME=postgres / Your Database user name
+DB_PASSWORD=postgres / Your Database password
+DB_NAME=inventory_db / Your Database name
 PORT=3000
 ```
 
