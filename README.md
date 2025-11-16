@@ -135,7 +135,9 @@ http://localhost:3000
 
 ### Endpoints
 
-#### 1. Create User
+#### Users
+
+##### 1. Create User
 
 **POST** `/users`
 
@@ -171,7 +173,112 @@ curl -X POST http://localhost:3000/users \
 
 ---
 
-#### 2. Create Product
+##### 2. Get All Users
+
+**GET** `/users`
+
+Retrieves all users.
+
+**Response:** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "name": "John Doe",
+    "email": "john@example.com"
+  }
+]
+```
+
+**cURL Example:**
+```bash
+curl http://localhost:3000/users
+```
+
+---
+
+##### 3. Get User by ID
+
+**GET** `/users/:id`
+
+Retrieves a specific user by ID.
+
+**Response:** `200 OK`
+```json
+{
+  "id": "uuid",
+  "name": "John Doe",
+  "email": "john@example.com"
+}
+```
+
+**cURL Example:**
+```bash
+curl http://localhost:3000/users/<uuid>
+```
+
+**Error Responses:**
+- `404 Not Found`: User not found
+
+---
+
+##### 4. Update User
+
+**PUT** `/users/:id`
+
+Updates user information. All fields are optional.
+
+**Request Body:**
+```json
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com"
+}
+```
+
+**Response:** `200 OK`
+```json
+{
+  "id": "uuid",
+  "name": "Jane Doe",
+  "email": "jane@example.com"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X PUT http://localhost:3000/users/<uuid> \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Jane Doe"}'
+```
+
+**Error Responses:**
+- `404 Not Found`: User not found
+- `409 Conflict`: Email already exists
+
+---
+
+##### 5. Delete User
+
+**DELETE** `/users/:id`
+
+Deletes a user.
+
+**Response:** `204 No Content`
+
+**cURL Example:**
+```bash
+curl -X DELETE http://localhost:3000/users/<uuid>
+```
+
+**Error Responses:**
+- `404 Not Found`: User not found
+
+---
+
+#### Products
+
+##### 1. Create Product
 
 **POST** `/products`
 
@@ -207,7 +314,109 @@ curl -X POST http://localhost:3000/products \
 
 ---
 
-#### 3. Adjust Product Inventory
+##### 2. Get All Products
+
+**GET** `/products`
+
+Retrieves all products.
+
+**Response:** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "name": "Laptop",
+    "quantity": 10
+  }
+]
+```
+
+**cURL Example:**
+```bash
+curl http://localhost:3000/products
+```
+
+---
+
+##### 3. Get Product by ID
+
+**GET** `/products/:id`
+
+Retrieves a specific product by ID.
+
+**Response:** `200 OK`
+```json
+{
+  "id": "uuid",
+  "name": "Laptop",
+  "quantity": 10
+}
+```
+
+**cURL Example:**
+```bash
+curl http://localhost:3000/products/<uuid>
+```
+
+**Error Responses:**
+- `404 Not Found`: Product not found
+
+---
+
+##### 4. Update Product
+
+**PUT** `/products/:id`
+
+Updates product information. Currently supports updating the product name.
+
+**Request Body:**
+```json
+{
+  "name": "Gaming Laptop"
+}
+```
+
+**Response:** `200 OK`
+```json
+{
+  "id": "uuid",
+  "name": "Gaming Laptop",
+  "quantity": 10
+}
+```
+
+**cURL Example:**
+```bash
+curl -X PUT http://localhost:3000/products/<uuid> \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Gaming Laptop"}'
+```
+
+**Error Responses:**
+- `404 Not Found`: Product not found
+- `409 Conflict`: Product name already exists
+
+---
+
+##### 5. Delete Product
+
+**DELETE** `/products/:id`
+
+Deletes a product.
+
+**Response:** `204 No Content`
+
+**cURL Example:**
+```bash
+curl -X DELETE http://localhost:3000/products/<uuid>
+```
+
+**Error Responses:**
+- `404 Not Found`: Product not found
+
+---
+
+##### 6. Adjust Product Inventory
 
 **PUT** `/products/adjust`
 
@@ -257,32 +466,9 @@ curl -X PUT http://localhost:3000/products/adjust \
 
 ---
 
-#### 4. Get Product Status
+#### Transactions
 
-**GET** `/products/status/:productId`
-
-Retrieves current product information including name and quantity.
-
-**Response:** `200 OK`
-```json
-{
-  "id": "uuid",
-  "name": "Laptop",
-  "quantity": 15
-}
-```
-
-**cURL Example:**
-```bash
-curl http://localhost:3000/products/status/<uuid>
-```
-
-**Error Responses:**
-- `404 Not Found`: Product not found
-
----
-
-#### 5. Get Transaction History
+##### 1. Get Transaction History
 
 **GET** `/transactions?limit=10&offset=0`
 
