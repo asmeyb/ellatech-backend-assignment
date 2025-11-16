@@ -17,7 +17,7 @@ import * as joi from 'joi';
         DB_PORT: joi.number().default(5432),
         DB_USERNAME: joi.string().default('postgres'),
         DB_PASSWORD: joi.string().required(),
-        DB_NAME: joi.string().default('inventory_db'),
+        DB_NAME: joi.string().required(),
         PORT: joi.number().default(3000),
       }),
     }),
