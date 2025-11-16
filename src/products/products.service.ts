@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { AdjustProductDto } from './dto/adjust-product.dto'; 
 import { TransactionType } from '../entities/transaction.entity';
 import { TransactionsService } from '../transactions/transactions.service';
@@ -37,12 +38,37 @@ export class ProductsService {
     return this.productsRepository.save(newProduct);
   }
 
+  async findAll(): Promise<Product[]> {
+    return this.productsRepository.find();
+  }
+
   async findOne(id: string): Promise<Product> {
     const product = await this.productsRepository.findOne({ where: { id } });
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found.`);
     }
     return product;
+  }
+
+  async update(id: string, updateProductDto: UpdateProductDto): Promise<Product> {
+    const product = await this.findOne(id);
+
+    if (updateProductDto.name && updateProductDto.name !== product.name) {
+      const existingProduct = await this.productsRepository.findOne({ 
+        where: { name: updateProductDto.name } 
+      });
+      if (existingProduct) {
+        throw new ConflictException('A product with this name already exists.');
+      }
+    }
+
+    Object.assign(product, updateProductDto);
+    return this.productsRepository.save(product);
+  }
+
+  async remove(id: string): Promise<void> {
+    const product = await this.findOne(id);
+    await this.productsRepository.remove(product);
   }
 
   async adjustStock(adjustDto: AdjustProductDto): Promise<Product> {
